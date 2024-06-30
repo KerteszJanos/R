@@ -119,3 +119,107 @@ msleep %>%
   arrange(Avarage)
 
 #Create tables
+msleep %>% 
+  select(vore, order) %>% 
+  filter(order %in% c("Rodentia", "Primates")) %>% 
+  table()
+
+plot(pressure)
+
+ggplot(data = starwars,
+       mapping = aes(x = gender))+
+  geom_bar()
+
+#Histograms
+starwars %>% 
+  drop_na(height) %>% 
+  ggplot(mapping = aes(x = height))+
+  geom_histogram()
+
+#Box plots
+starwars %>% 
+  drop_na(height) %>% 
+  ggplot(mapping = aes(x = height))+
+  geom_boxplot(fill = "red")+
+  theme_bw()+
+  labs(title = "Boxplot of height",
+       x = "Height of caracters")
+
+#Density plots
+starwars %>% 
+  drop_na(height) %>% 
+  filter(sex %in% c("male", "female")) %>% 
+  ggplot(mapping = aes(x = height,
+                       color = sex,
+                       fill = sex))+
+  geom_density(alpha = 0.2)+
+  theme_bw()
+
+#Scatter plots
+starwars %>% 
+  drop_na(sex) %>%
+  filter(mass < 200) %>% 
+  ggplot(aes(height, mass, color = sex))+
+  geom_point(size = 5, alpha = 0.5)+
+  theme_bw()+
+  labs(title = "Height and mass by sex")
+
+#Smoothed model
+starwars %>% 
+  filter(mass < 200) %>% 
+  ggplot(aes(height, mass, color = sex))+
+  geom_point(size = 3, alpha = 0.8)+
+  geom_smooth()+
+  facet_wrap(~sex)+
+  theme_bw()+
+  labs("Height and mass by sex")
+
+#Analyzing data
+library(gapminder)
+gapminder
+
+#T-test
+gapminder %>% 
+  filter(continent %in% c("Africa", "Europe")) %>% 
+  t.test(lifeExp ~ continent, data = .,
+         alternative = "two.sided",
+         peired = FALSE)
+
+#ANOVA
+gapminder %>% 
+  filter(year == 2007) %>% 
+  filter(continent %in% c("Americas", "Europe", "Asia")) %>% 
+  aov(lifeExp ~ continent, data = .) %>% 
+  summary()
+
+gapminder %>% 
+  filter(year == 2007) %>% 
+  filter(continent %in% c("Americas", "Europe", "Asia")) %>% 
+  aov(lifeExp ~ continent, data = .) %>% 
+  TukeyHSD() %>% 
+  plot()
+
+#Chi sqared
+head(iris)
+flowers <- iris %>% 
+  mutate(size = cut(Sepal.Length,
+                    breaks = 3,
+                    labels = c("Small", "Medium", "Large"))) %>% 
+  select(Species, size)
+flowers
+
+flowers %>% 
+  select(size) %>% 
+  table() %>% 
+  chisq.test()
+
+flowers %>% 
+  table() %>% 
+  chisq.test()
+
+#Linear model
+head(cars, 10)
+
+cars %>% 
+  lm(dist ~ speed, data = .) %>% 
+  summary()
